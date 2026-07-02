@@ -130,3 +130,101 @@ CZ ID is a hypothesis-free global software platform for identifying pathogens in
 - **Consensus Genome** - Viral genome assembly
 - **Phylogenetic Tree** - Evolutionary analysis
 - **Benchmark** - Pipeline performance testing
+
+## SeqtoID Rebranding Context
+
+### Active branch
+local-dev/rebrand-001
+
+### Git workflow
+- All rebranding changes go on branch: local-dev/rebrand-001
+- Push to remote "ikrama" (ikrama-slower/seqtoid-web), NOT origin
+- origin push is intentionally blocked (no_push)
+- Commit format: "REBRAND-XXX: description of change"
+
+### Open Jira tickets
+- REBRAND-06: Replace all CZID/CZI/Chan Zuckerberg text references with SeqtoID
+- REBRAND-07: Identify all logo placement locations
+- REBRAND-08: Implement logo replacement across UI
+- REBRAND-09: Audit all user-facing UI for required changes
+- REBRAND-10: Implement UI updates for compliance changes
+- REBRAND-11: Validate UI consistency across pages
+
+### UCSF Color Palette (official)
+- Navy (primary):     #052049
+- CTA Blue (buttons): #006BE9
+- Teal accent:        #16A0AC
+- Light teal:         #60D0DA
+- Blue accent:        #178CCB
+- Light blue bg:      #E2F4FC
+- White:              #FFFFFF
+
+### SeqtoID logo colors
+- #3cb9f0 (blue)
+- #60d0da (teal)
+
+### Text replacements needed
+- "CZ ID" → "SeqtoID"
+- "CZID" → "SeqtoID"
+- "Chan Zuckerberg ID" → "SeqtoID"
+- "Chan Zuckerberg Initiative" → "UCSF" (context-dependent)
+- "CZI" → "SeqtoID" or "UCSF" (context-dependent)
+- "czid" (in user-facing strings only, NOT code/URLs/variable names) → "SeqtoID"
+
+### What NOT to change
+- Variable names, function names, class names in code
+- URL paths and API endpoints
+- Database column names
+- Comments in code
+- Package names in package.json/Gemfile
+- SSM parameter paths
+
+### Local dev
+- App runs at http://127.0.0.1:3001
+- Login: http://127.0.0.1:3001/direct_user_login?user_id=1
+- Webpack watch is already running in a separate terminal (node v16.15.0)
+- Do NOT run npm start — already running
+
+### Stack
+- Rails 7 + React 18 + TypeScript
+- Webpack (custom, not Webpacker)
+- CSS/SCSS modules
+- Compiled assets go to app/assets/dist/
+
+## Current progress (as of July 1, 2026)
+
+### Completed tickets
+- REBRAND-06: Text replacements done (banners, FAQ, benchmarks, admin panel)
+  - Removed CZI/Biohub partner logos from Footer
+  - Disabled /impact route (redirects to root)
+  - Committed: b87731f, 6dc1d3c
+- REBRAND-10: Privacy Notice and Terms of Use replaced with UCSF legal content
+  - Used inline <style> injection approach (not CSS modules)
+  - Committed: 4e8c25c
+
+### Approach learned: inline style injection
+For legal/document pages, do NOT use CSS modules. Use this pattern instead:
+const PAGE_STYLES = `...css string...`;
+<style dangerouslySetInnerHTML={{ __html: PAGE_STYLES }} />
+Use plain class names like "privacy-notice-table", not cs.xxx
+
+### Blocked (waiting on MJ)
+- Footer links — what URL for UCSF website?
+- CZ Biohub / Gates Foundation logos — remove or keep?
+- Favicon — no SeqtoID favicon asset exists yet
+- Impact page — needs full content rewrite or removal
+- Contact emails — help@czid.org, privacy@czid.org, security@czid.org migration
+
+### Next tickets to work on
+- REBRAND-07: Logo placement audit
+- REBRAND-08: Logo replacement
+- REBRAND-09: Full UI audit for remaining changes
+- REBRAND-10: Terms/Privacy styling polish (more work needed)
+- Color changes across all pages to UCSF palette
+
+### Key local dev reminders
+- Always use: http://127.0.0.1:3001 (not localhost)
+- If blank page: docker compose restart web
+- If assets stale: docker exec seqtoid-web-web-1 rm -rf /app/tmp/cache/assets
+- webpack must be running: nvm use 16.15.0 && npm start
+- CZID_CLOUDFRONT_ENDPOINT=http://127.0.0.1:3001 must be in web.env
