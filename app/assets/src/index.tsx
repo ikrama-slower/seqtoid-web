@@ -1,4 +1,3 @@
-import { defaultTheme } from "@czi-sds/components";
 import { ThemeProvider as EmotionThemeProvider } from "@emotion/react";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import * as Sentry from "@sentry/react";
@@ -9,6 +8,7 @@ import { BrowserRouter } from "react-router-dom";
 import "semantic-ui-css/semantic.min.css";
 import "url-search-params-polyfill";
 import { UserContext } from "~/components/common/UserContext";
+import { ucsfTheme } from "~/theme/ucsfTheme";
 import { SHOULD_READ_FROM_NEXTGEN } from "./components/utils/features";
 import { initialGlobalContextState } from "./globalContext/initialState";
 import { GlobalContext, globalContextReducer } from "./globalContext/reducer";
@@ -80,8 +80,8 @@ const ReactComponentWithGlobalContext = ({
               value={{ globalContextState, globalContextDispatch }}
             >
               <StyledEngineProvider injectFirst>
-                <EmotionThemeProvider theme={defaultTheme}>
-                  <ThemeProvider theme={defaultTheme}>
+                <EmotionThemeProvider theme={ucsfTheme}>
+                  <ThemeProvider theme={ucsfTheme}>
                     {React.createElement(matchedComponent, props)}
                   </ThemeProvider>
                 </EmotionThemeProvider>
