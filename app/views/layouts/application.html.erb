@@ -29,14 +29,27 @@
     <meta name="twitter:image" content="https://assets.prod.czid.org/assets/CZID_Meta.png" />
 
     <%= csrf_meta_tags %>
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <% if Rails.env.development? %>
+      <%# Local dev: load webpack bundles directly (served via Rack::Static with %>
+      <%# no-cache) so browser refresh always gets the latest build, bypassing %>
+      <%# Sprockets' stale fingerprint cache. Production keeps the Sprockets path. %>
+      <link rel="stylesheet" href="/dist/vendors.bundle.min.css" media="all">
+      <link rel="stylesheet" href="/dist/main.bundle.min.css" media="all">
+    <% else %>
+      <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <% end %>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <!-- The following line is a side fix to work around our issue with @import url(..) declarations in Sass. -->
     <!-- As soon as possible, the Sass issues should be fixed and this streamlined back into our Sass build. -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,600i,700,700i,800" rel="stylesheet">
-    <%= javascript_include_tag 'vendors' %>
-    <%= javascript_include_tag 'application' %>
-    <link rel="icon" type="image/png" href="<%= image_url("logo-#{Rails.env}.png") %>"/>
+    <% if Rails.env.development? %>
+      <script src="/dist/vendors.bundle.min.js"></script>
+      <script src="/dist/main.bundle.min.js"></script>
+    <% else %>
+      <%= javascript_include_tag 'vendors' %>
+      <%= javascript_include_tag 'application' %>
+    <% end %>
+    <link rel="icon" type="image/x-icon" href="<%= image_url("seqtoid_favicon.ico") %>"/>
   </head>
 
   <body id="id-seq">
